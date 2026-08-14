@@ -67,30 +67,6 @@ header {
   padding: 4px 0;
 }
 
-.brand-badge {
-  background: var(--blue-primary);
-  color: #ffffff;
-  font-weight: 900;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-family: 'Manrope', sans-serif;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  align-items: center;
-}
-
-.brand-badge span {
-  font-size: 9px;
-  font-weight: 700;
-  opacity: 0.9;
-  letter-spacing: 0.12em;
-  margin-top: 2px;
-}
-
 .brand-inst b {
   display: block;
   font-size: 15px;
@@ -184,38 +160,12 @@ main {
 .content {
   max-width: 1200px;
   margin: auto;
-  padding: 50px 24px;
+  padding: 60px 24px;
 }
 
 .hero {
-  background: radial-gradient(circle at 85% 15%, #0054a618 0 180px, transparent 182px);
+  background: radial-gradient(circle at 85% 15%, #0054a614 0 200px, transparent 202px);
   min-height: calc(100vh - 76px);
-}
-
-.hero-inst-header {
-  background: #ffffff;
-  padding: 20px 28px;
-  border-radius: 16px;
-  display: inline-flex;
-  flex-direction: column;
-  border: 1px solid var(--blue-border);
-  box-shadow: 0 4px 18px rgba(0, 84, 166, 0.06);
-}
-
-.hero-inst-header .gov-title {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: var(--blue-primary);
-  text-transform: uppercase;
-}
-
-.hero-inst-header .sec-title {
-  font-size: 19px;
-  font-weight: 800;
-  color: var(--blue-dark);
-  font-family: 'Manrope', sans-serif;
-  margin-top: 4px;
 }
 
 .eyebrow,

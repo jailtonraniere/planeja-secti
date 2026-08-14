@@ -159,10 +159,6 @@ export function App() {
     <div className="app">
       <header>
         <button className="brand" onClick={() => setPage('home')}>
-          <div className="brand-badge">
-            RECIFE
-            <span>PREFEITURA</span>
-          </div>
           <div className="brand-inst">
             <b>Secretaria de Transformação Digital, Ciência e Tecnologia</b>
             <small>Prefeitura do Recife</small>
@@ -303,11 +299,7 @@ export function App() {
 function HomePage({ start, dashboard }: { start: () => void; dashboard: () => void }) {
   return (
     <section className="hero">
-      <div className="hero-inst-header">
-        <div className="gov-title">Prefeitura do Recife</div>
-        <div className="sec-title">Secretaria de Transformação Digital, Ciência e Tecnologia</div>
-      </div>
-      <div className="eyebrow" style={{ marginTop: '24px' }}>
+      <div className="eyebrow">
         OFICINA DE PLANEJAMENTO ESTRATÉGICO 2025–2028
       </div>
       <h1>
