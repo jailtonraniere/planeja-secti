@@ -2,9 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { BarChart3, CheckCircle2, ChevronRight, Download, Printer, Save, Search, TriangleAlert, WifiOff, Plus } from 'lucide-react';
 import { areas, axes, executiveSecretariats, indicatorCatalog, objectives, strategy } from './data';
 import { load, save, type Store } from './storage';
-import type { Participant, Project, Status } from './types';
+import type { Participant, Project } from './types';
 import { normalizeDisplay, validate } from './validation';
-import { Logo } from './Logo';
 
 type Page = 'home' | 'identify' | 'projects' | 'edit' | 'review' | 'dashboard';
 const steps = ['Enquadramento', 'Iniciativas e meta', 'Resultados anuais', 'Indicador e métrica'];
@@ -130,11 +129,18 @@ export function App() {
     <div className="app">
       <header>
         <button className="brand" onClick={() => setPage('home')}>
-          <Logo height={38} light={true} />
+          <div className="brand-badge">
+            RECIFE
+            <span>PREFEITURA</span>
+          </div>
+          <div className="brand-inst">
+            <b>Secretaria de Transformação Digital, Ciência e Tecnologia</b>
+            <small>Prefeitura do Recife</small>
+          </div>
           <div className="brand-divider" />
-          <div className="brand-titles">
+          <div className="brand-app">
             <b>Planeja SECTI</b>
-            <small>Oficina de Planejamento 2025–2028</small>
+            <small>Oficina 2025–2028</small>
           </div>
         </button>
         <nav>
@@ -263,8 +269,9 @@ export function App() {
 function HomePage({ start, dashboard }: { start: () => void; dashboard: () => void }) {
   return (
     <section className="hero">
-      <div className="hero-badge">
-        <Logo height={48} light={false} />
+      <div className="hero-inst-header">
+        <div className="gov-title">Prefeitura do Recife</div>
+        <div className="sec-title">Secretaria de Transformação Digital, Ciência e Tecnologia</div>
       </div>
       <div className="eyebrow" style={{ marginTop: '24px' }}>
         OFICINA DE PLANEJAMENTO ESTRATÉGICO 2025–2028
@@ -326,7 +333,7 @@ function Identify({ initial, done }: { initial?: Participant; done: (p: Particip
       <div className="kicker">Identificação do Participante</div>
       <h2>Como você participa desta oficina?</h2>
       <p>Seus dados acompanham o histórico das alterações e facilitam a consolidação.</p>
-      
+
       <label>
         Seu nome completo *
         <input
@@ -869,8 +876,8 @@ function Dashboard({
             {executiveSecretariats.map((sec) => {
               const total = projects.filter((p) => p.executive.toUpperCase() === sec.id.toUpperCase()).length;
               return (
-                <li key={sec.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #eee' }}>
-                  <span><b>{sec.id}</b> <small style={{ color: '#63747b' }}>{sec.name.split('—')[1]}</small></span>
+                <li key={sec.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #d2e1ef' }}>
+                  <span><b>{sec.id}</b> <small style={{ color: 'var(--muted)' }}>{sec.name.split('—')[1]}</small></span>
                   <b>{total}</b>
                 </li>
               );
