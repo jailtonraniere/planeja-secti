@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BarChart3, CheckCircle2, ChevronRight, Download, Printer, Save, Search, TriangleAlert, WifiOff, Plus } from 'lucide-react';
+import { BarChart3, CheckCircle2, ChevronRight, Download, Printer, Save, Search, TriangleAlert, WifiOff, Plus, RefreshCw } from 'lucide-react';
 import { areas, axes, executiveSecretariats, indicatorCatalog, objectives, strategy } from './data';
-import { load, save, type Store } from './storage';
+import { load, save, syncProjectToSupabase, fetchProjectsFromSupabase, subscribeToProjectsRealtime, type Store } from './storage';
 import type { Participant, Project } from './types';
 import { normalizeDisplay, validate } from './validation';
 
@@ -14,6 +14,7 @@ export function App() {
   const [selected, setSelected] = useState<string>('');
   const [step, setStep] = useState(0);
   const [saved, setSaved] = useState(false);
+  const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('Todos');
   const [execFilter, setExecFilter] = useState('Todas');
@@ -23,6 +24,30 @@ export function App() {
 
   const project = store.projects.find((p) => p.id === selected);
 
+  // 1. Carregar dados atualizados do Supabase ao iniciar
+  useEffect(() => {
+    fetchProjectsFromSupabase().then((dbProjects) => {
+      if (dbProjects && dbProjects.length > 0) {
+        setStore((s) => ({ ...s, projects: dbProjects }));
+      }
+    });
+  }, []);
+
+  // 2. Escutar alterações Realtime de outros participantes
+  useEffect(() => {
+    const unsubscribe = subscribeToProjectsRealtime((updatedProject) => {
+      setStore((s) => {
+        const exists = s.projects.some((p) => p.id === updatedProject.id);
+        const newProjects = exists
+          ? s.projects.map((p) => (p.id === updatedProject.id ? updatedProject : p))
+          : [...s.projects, updatedProject];
+        return { ...s, projects: newProjects };
+      });
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 3. Salvar localmente (autosave)
   useEffect(() => {
     const t = setTimeout(() => {
       save(store);
@@ -34,18 +59,16 @@ export function App() {
 
   const update = (patch: Partial<Project>) => {
     if (!project) return;
+    const updated: Project = {
+      ...project,
+      ...patch,
+      updatedAt: new Date().toISOString(),
+      updatedBy: store.participant?.name || 'Participante',
+    };
+
     setStore((s) => ({
       ...s,
-      projects: s.projects.map((p) =>
-        p.id === project.id
-          ? {
-              ...p,
-              ...patch,
-              updatedAt: new Date().toISOString(),
-              updatedBy: s.participant?.name || 'Participante',
-            }
-          : p
-      ),
+      projects: s.projects.map((p) => (p.id === project.id ? updated : p)),
       history: [
         ...s.history,
         {
@@ -56,6 +79,12 @@ export function App() {
         },
       ],
     }));
+
+    // Sincronizar com a nuvem (Supabase)
+    setIsCloudSyncing(true);
+    syncProjectToSupabase(updated).finally(() => {
+      setTimeout(() => setIsCloudSyncing(false), 800);
+    });
   };
 
   const goProject = (id: string) => {
@@ -92,6 +121,7 @@ export function App() {
       updatedBy: store.participant?.name || '',
     };
     setStore((s) => ({ ...s, projects: [...s.projects, p] }));
+    syncProjectToSupabase(p);
     setNewProjectModal(false);
     setNewProjName('');
     setNewProjExec('');
@@ -158,13 +188,17 @@ export function App() {
             <>
               <WifiOff /> Offline
             </>
+          ) : isCloudSyncing ? (
+            <>
+              <RefreshCw className="spin" /> Nuvem...
+            </>
           ) : saved ? (
             <>
-              <CheckCircle2 /> Salvo
+              <CheckCircle2 /> Sincronizado
             </>
           ) : (
             <>
-              <Save /> Autosave
+              <Save /> Nuvem Conectada
             </>
           )}
         </div>
