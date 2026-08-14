@@ -45,7 +45,7 @@ O frontend atual mantém o modo de demonstração local. A adaptação do reposi
 - E-SUAS / Sistema E-SUAS / SUAS Digital: nomes possivelmente relacionados, sem fusão.
 - SUAS Fácil: projeto próprio ou iniciativa do SUAS Digital.
 
-SUAS Inteligente foi excluído. Voucher 99 não foi incluído no portfólio estratégico.
+Voucher 99 não foi incluído no portfólio estratégico.
 
 ## Limitações conhecidas
 
